@@ -152,7 +152,7 @@ const Header: React.FC<HeaderProps> = ({ onLocationSelect, onPostSearchSelect })
         <Box ml={2}>
           <NavLink to={`/clients/${user.id}/profile`}>
             <Avatar
-              src={`https://custme.site/storage/${
+              src={`https://custme.site/storage/app/public/${
                 user.personal_information?.profilepicture || 'images/default-profile.png'
               }`}
               alt="Profile"

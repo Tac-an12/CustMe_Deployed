@@ -12,6 +12,14 @@ const HomeHeader = () => {
     setSidebarOpen(!sidebarOpen);
   };
 
+  const handleScroll = (id) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+    setSidebarOpen(false);
+  };
+
   return (
     <>
       {/* AppBar for desktop */}
@@ -32,16 +40,22 @@ const HomeHeader = () => {
             <NavLink to="/" className="text-black font-semibold mx-4 cursor-pointer hover:text-blue-500">
               Home
             </NavLink>
-            <NavLink to="#about" className="text-black font-semibold mx-4 cursor-pointer hover:text-blue-500">
+            <span
+              className="text-black font-semibold mx-4 cursor-pointer hover:text-blue-500"
+              onClick={() => handleScroll('about')}
+            >
               About
-            </NavLink>
-            <NavLink to="#services" className="text-black font-semibold mx-4 cursor-pointer hover:text-blue-500">
+            </span>
+            <span
+              className="text-black font-semibold mx-4 cursor-pointer hover:text-blue-500"
+              onClick={() => handleScroll('services')}
+            >
               Services
-            </NavLink>
+            </span>
             <NavLink to="/login" className="text-black font-semibold mx-4 cursor-pointer hover:text-yellow-500">
               Sign In
             </NavLink>
-            <NavLink to="/register" className=" text-black font-semibold mx-4 cursor-pointer hover:text-yellow-500">
+            <NavLink to="/register" className="text-black font-semibold mx-4 cursor-pointer hover:text-yellow-500">
               Sign Up
             </NavLink>
           </div>
@@ -86,20 +100,18 @@ const HomeHeader = () => {
           >
             Home
           </NavLink>
-          <NavLink
-            to="#about"
+          <span
             className="text-black font-semibold py-2 cursor-pointer hover:text-blue-500 text-2xl sm:text-3xl"
-            onClick={toggleSidebar}
+            onClick={() => handleScroll('about')}
           >
             About
-          </NavLink>
-          <NavLink
-            to="#services"
+          </span>
+          <span
             className="text-black font-semibold py-2 cursor-pointer hover:text-blue-500 text-2xl sm:text-3xl"
-            onClick={toggleSidebar}
+            onClick={() => handleScroll('services')}
           >
             Services
-          </NavLink>
+          </span>
           <NavLink
             to="/login"
             className="text-black font-semibold py-2 cursor-pointer hover:text-yellow-500 text-2xl sm:text-3xl"
@@ -121,4 +133,3 @@ const HomeHeader = () => {
 };
 
 export default HomeHeader;
-

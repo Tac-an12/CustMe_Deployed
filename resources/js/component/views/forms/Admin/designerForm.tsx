@@ -140,7 +140,7 @@ const DesignerPostForm: React.FC = () => {
                   <img
                     src={ 
                       post.user.personal_information?.profilepicture
-                        ? `https://custme.site/storage/app/public/images/${post.user.personal_information.profilepicture}`
+                        ? `https://custme.site/storage/app/public/${post.user.personal_information.profilepicture}`
                         : "https://via.placeholder.com/40"
                     }
                     alt="Profile"

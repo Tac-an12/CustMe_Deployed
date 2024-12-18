@@ -13,7 +13,6 @@ const PostCard = ({ post, onRequestSubmit }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const navigate = useNavigate(); 
 
-
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -34,7 +33,7 @@ const PostCard = ({ post, onRequestSubmit }) => {
   };
 
   return (
-    <div className="bg-white p-4 mb-4 rounded-md shadow-md max-w-md">
+    <div className="bg-white p-4 mb-4 rounded-md shadow-md max-w-md w-full sm:w-11/12 md:w-10/12 lg:w-8/12">
       <div className="flex justify-between items-center mb-2">
         <div className="flex items-center">
           <Avatar 
@@ -45,33 +44,33 @@ const PostCard = ({ post, onRequestSubmit }) => {
             sx={{ width: 40, height: 40 }} 
           />
           <div className="ml-3">
-            <Typography variant="body1" className="font-bold">{post.user.username}</Typography>
-            <Typography variant="body2" className="text-gray-500">{new Date(post.created_at).toLocaleDateString()}</Typography>
+            <Typography variant="body1" className="font-bold text-sm sm:text-base">{post.user.username}</Typography>
+            <Typography variant="body2" className="text-gray-500 text-xs sm:text-sm">{new Date(post.created_at).toLocaleDateString()}</Typography>
           </div>
         </div>
-        <IconButton onClick={handleMenuOpen}>
+        <IconButton onClick={handleMenuOpen} size="small">
           <MoreVertIcon />
         </IconButton>
       </div>
       
       {post.tags && post.tags.length > 0 ? (
-        <Typography variant="body2" className="bg-gray-200 px-2 py-1 text-sm">
+        <Typography variant="body2" className="bg-gray-200 px-2 py-1 text-xs sm:text-sm">
           <SeeMoreText text={post.tags.map((tag) => `#${tag.name}`).join(" ")} />
         </Typography>
       ) : (
-        <Typography variant="body2" color="textSecondary">
+        <Typography variant="body2" color="textSecondary" className="text-xs sm:text-sm">
           No tags available
         </Typography>
       )}
 
-      <Typography variant="body1" className="mb-4">
+      <Typography variant="body1" className="mb-4 text-sm sm:text-base">
         <SeeMoreText text={post.title} />
       </Typography>
-      <Typography variant="body1" className="mb-4">
+      <Typography variant="body1" className="mb-4 text-sm sm:text-base">
         <SeeMoreText text={post.content} />
       </Typography>
-      <Typography variant="body1" className="mb-4">
-        Price {post.price}
+      <Typography variant="body1" className="mb-4 text-sm sm:text-base">
+        Price: {post.price}
       </Typography>
 
       {post.images.length > 0 && (
@@ -83,10 +82,10 @@ const PostCard = ({ post, onRequestSubmit }) => {
           />
           {post.images.length > 1 && (
             <div className="absolute top-1/2 left-0 right-0 flex justify-between px-2 transform -translate-y-1/2">
-              <IconButton onClick={handlePrevImage}>
+              <IconButton onClick={handlePrevImage} size="small">
                 <ArrowBackIcon />
               </IconButton>
-              <IconButton onClick={handleNextImage}>
+              <IconButton onClick={handleNextImage} size="small">
                 <ArrowForwardIcon />
               </IconButton>
             </div>
@@ -94,13 +93,13 @@ const PostCard = ({ post, onRequestSubmit }) => {
         </div>
       )}
 
-      <Button variant="contained" color="warning" className="w-full" onClick={() => onRequestSubmit(post)}>
+      <Button variant="contained" color="warning" className="w-full text-xs sm:text-sm" onClick={() => onRequestSubmit(post)}>
         Interested
       </Button>
       <Button 
         variant="contained" 
         color="primary" 
-        className="w-full -mt-10" 
+        className="w-full mt-2 text-xs sm:text-sm" 
         onClick={() => handleSendMessage(post.user.user_id)}
       >
         Send Message
@@ -150,10 +149,10 @@ const ClientPost = () => {
   };
 
   return (
-    <div className="ml-48 mt-16 p-8 flex justify-center">
+    <div className="ml-4 sm:ml-16 mt-8 p-4 flex justify-center">
       <Header />
       <div className="w-full max-w-xl">
-        <Typography variant="h5" className="mb-6">Clients Post</Typography>
+        <Typography variant="h5" className="mb-6 text-sm sm:text-lg">Clients Post</Typography>
         {posts.length > 0 ? (
           posts
             .filter(post => post.user.role.rolename === 'User')
@@ -161,7 +160,7 @@ const ClientPost = () => {
               <PostCard key={post.post_id} post={post} onRequestSubmit={handleRequestButtonClick} />
             ))
         ) : (
-          <Typography>No client posts available</Typography>
+          <Typography className="text-sm sm:text-base">No client posts available</Typography>
         )}
       </div>
 
@@ -185,8 +184,8 @@ const SeeMoreText = ({ text }: { text: string }) => {
 
   return (
     <div>
-      <Typography variant="body2">
-        {isTruncated ? text.substring(0, 20) : text}{" "}
+      <Typography variant="body2" className="text-xs sm:text-sm">
+        {isTruncated ? text.substring(0, 20) : text} {" "}
         <span className="text-blue-500 cursor-pointer" onClick={toggleTruncate}>
           {isTruncated ? "... See More" : " See Less"}
         </span>

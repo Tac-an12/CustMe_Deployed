@@ -121,7 +121,7 @@ const MeetTheTeam = () => {
                   <CardMedia
                     component="img"
                     height="200"
-                    image={profile.personal_information.profilepicture ? `http://127.0.0.1:8000/storage/${profile.personal_information.profilepicture}` : defaultProfilePicture}
+                    image={profile.personal_information.profilepicture ? `https://custme.site/storage/app/public/${profile.personal_information.profilepicture}` : defaultProfilePicture}
                     alt={profile.username}
                   />
                   {renderCardContent(profile)}
@@ -171,7 +171,7 @@ const MeetTheTeam = () => {
                   <CardMedia
                     component="img"
                     height="200"
-                    image={profile.personal_information.profilepicture ? `http://127.0.0.1:8000/storage/${profile.personal_information.profilepicture}` : defaultProfilePicture}
+                    image={profile.personal_information.profilepicture ? `https://custme.site/storage/app/public/${profile.personal_information.profilepicture}` : defaultProfilePicture}
                     alt={profile.username}
                   />
                   {renderCardContent(profile)}
