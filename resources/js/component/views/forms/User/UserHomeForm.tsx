@@ -76,11 +76,11 @@ const UserHomeForm = () => {
       <div className="bg-white p-4 mb-4 rounded-md justify-center shadow-md max-w-md">
         <div className="flex justify-between  items-center mb-2">
           <div className="flex items-center">
-            <Avatar
+            {/* <Avatar
               alt={post.user.username}
-              src={`https://custme.site/storage/app/public/${post.user.personal_information.profilepicture}}`}
-              sx={{ width: 40, height: 40 }}
-            />
+              // src={`https://custme.site/storage/app/public/${post.user.personal_information.profilepicture}}`}
+              // sx={{ width: 40, height: 40 }}
+            /> */}
             <div className="ml-3">
               <Typography variant="body1" className="font-bold">
                 {post.user.username}

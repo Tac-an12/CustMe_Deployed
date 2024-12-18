@@ -6,6 +6,7 @@ import { getDistance } from 'geolib'; // Import geolib for distance calculation
 import Header from './forms/components/header';
 import SearchBar from '../views/searchbar';
 import { useAuth } from "../context/AuthContext";
+import L from 'leaflet';
 
 const MapView: React.FC = () => {
   const { allStores } = useSearch();
@@ -15,6 +16,15 @@ const MapView: React.FC = () => {
   const { user } = useAuth();
   const [distancesToStores, setDistancesToStores] = useState<any[]>([]); // Change to an array to hold distances to all stores
 
+  const customMarkerIcon = L.icon({
+    iconUrl: '/build/assets/marker-icon-hN30_KVU.png', // Path to your marker icon
+    iconSize: [25, 41], // Default size for Leaflet markers
+    iconAnchor: [12, 41], // Anchor point for the marker (center bottom)
+    popupAnchor: [0, -41], // Point where the popup opens relative to the icon
+    shadowUrl: '/build/assets/marker-shadow.png', // Optional shadow image
+    shadowSize: [41, 41], // Size of the shadow
+    shadowAnchor: [12, 41], // Anchor point for the shadow
+  });
   // Custom hook to zoom the map to the selected location
   const ZoomToLocation = ({ location }) => {
     const map = useMap();
@@ -197,6 +207,7 @@ const MapView: React.FC = () => {
             <Marker
               key={store.id}
               position={[latitude, longitude]}
+              icon={customMarkerIcon} 
               eventHandlers={{
                 click: () => {
                   console.log('Marker clicked:', store.location); // Debug log for marker click

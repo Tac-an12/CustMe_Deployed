@@ -74,7 +74,7 @@ class RequestController extends Controller
 
         // Log the notification creation event
         Log::info('Notification created:', $notification->toArray());
-        broadcast(new NotificationEvent($notification));
+        event(new NotificationEvent($notification));
 
         return response()->json(['message' => 'Request created and notification sent.'], 201);
     }
@@ -207,7 +207,7 @@ class RequestController extends Controller
             ]);
 
             Log::info('Declined request: ' . json_encode($notification));
-            event(new NotificationEvent($notification)); // Fire event to notify in real-time
+            event(new NotificationEvent($notification));
 
             return response()->json(['message' => 'Request declined, payment refunded, and sender notified.'], 200);
         } catch (\Exception $e) {
@@ -358,6 +358,7 @@ class RequestController extends Controller
                 $notification->update([
                     'status' => 'accepted',
                 ]);
+                event(new NotificationEvent($notification));
 
                 return response()->json([
                     'checkout_url' => $checkoutUrl,

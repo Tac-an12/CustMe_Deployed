@@ -11,25 +11,46 @@ import {
   Paper,
   Button,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import Header from "./forms/components/header";
 import { useAuth } from "../context/AuthContext";
 import apiService from "../services/apiService";
 
 const PaymentsTable = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm")); // Check if the screen size is small
   const {
     requests = [],
     loading,
     error,
     fetchRequestPayments,
-  } = useAdminPaymentContext(); // Default to empty array
+  } = useAdminPaymentContext();
   const { user } = useAuth();
 
   useEffect(() => {
     if (requests.length === 0 && !loading) {
-      fetchRequestPayments(); // Fetch data only if requests array is empty and not already loading
+      fetchRequestPayments();
     }
   }, [requests.length, loading, fetchRequestPayments]);
+
+  const handlePayment = async (requestId) => {
+    try {
+      const response = await apiService.post(`/payforproduct80/${requestId}`);
+      if (response.data && response.data.checkout_url) {
+        window.open(response.data.checkout_url, "_blank");
+        await fetchRequestPayments();
+      } else {
+        console.error(
+          "Failed to get checkout URL:",
+          response.data.error || "Unknown error"
+        );
+      }
+    } catch (error) {
+      console.error("Error initiating payment:", error);
+    }
+  };
 
   if (loading)
     return (
@@ -45,69 +66,46 @@ const PaymentsTable = () => {
       </div>
     );
 
-    const handlePayment = async (requestId) => {
-      try {
-        const response = await apiService.post(`/payforproduct80/${requestId}`);
-        if (response.data && response.data.checkout_url) {
-          // Open the checkout URL in a new tab
-          window.open(response.data.checkout_url, "_blank");
-    
-          // Re-fetch the payment requests to update the UI
-          await fetchRequestPayments();
-        } else {
-          console.error(
-            "Failed to get checkout URL:",
-            response.data.error || "Unknown error"
-          );
-        }
-      } catch (error) {
-        console.error("Error initiating payment:", error);
-      }
-    };
-    
-
   return (
     <div>
       <Header />
-      <TableContainer component={Paper} className="shadow-md rounded-lg mt-20" style={{ maxHeight: '570px', overflowY: 'auto' }}>
+      <TableContainer
+        component={Paper}
+        className="shadow-md rounded-lg mt-20"
+        style={{
+          maxHeight: "570px",
+          overflowY: "auto",
+          overflowX: isMobile ? "auto" : "hidden", // Enable horizontal scrolling for mobile
+        }}
+      >
         {Array.isArray(requests) && requests.length > 0 ? (
           <Table>
-            <TableHead style={{ position: 'sticky', top: 0, backgroundColor: '#E0E0E0', zIndex: 2 }}>
+            <TableHead
+              style={{
+                position: "sticky",
+                top: 0,
+                backgroundColor: "#E0E0E0",
+                zIndex: 2,
+              }}
+            >
               <TableRow>
-                <TableCell className="text-white font-semibold">ID</TableCell>
-                <TableCell className="text-white font-semibold">
-                  Request ID
-                </TableCell>
-                <TableCell className="text-white font-semibold">
-                  Request Type
-                </TableCell>
-                <TableCell className="text-white font-semibold">
-                  Amount
-                </TableCell>
-                <TableCell className="text-white font-semibold">
-                  Status
-                </TableCell>
-                <TableCell className="text-white font-semibold">
-                  Payment Method
-                </TableCell>
-                <TableCell className="text-white font-semibold">
-                  Created At
-                </TableCell>
-                <TableCell className="text-white font-semibold">
-                  Actions
-                </TableCell>
+                <TableCell>ID</TableCell>
+                <TableCell>Request ID</TableCell>
+                {!isMobile && <TableCell>Request Type</TableCell>} {/* Hide on mobile */}
+                <TableCell>Amount</TableCell>
+                <TableCell>Status</TableCell>
+                {!isMobile && <TableCell>Payment Method</TableCell>} {/* Hide on mobile */}
+                {!isMobile && <TableCell>Created At</TableCell>} {/* Hide on mobile */}
+                <TableCell>Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {requests.map((request) =>
                 request.initial_payments?.map((payment) => (
-                  <TableRow
-                    key={payment.initial_payment_id}
-                    className="hover:bg-gray-100"
-                  >
+                  <TableRow key={payment.initial_payment_id}>
                     <TableCell>{payment.initial_payment_id}</TableCell>
                     <TableCell>{payment.request_id}</TableCell>
-                    <TableCell>{request.request_type}</TableCell>
+                    {!isMobile && <TableCell>{request.request_type}</TableCell>}
                     <TableCell>
                       Php {parseFloat(payment.amount).toFixed(2)}
                     </TableCell>
@@ -124,10 +122,14 @@ const PaymentsTable = () => {
                         {payment.status}
                       </span>
                     </TableCell>
-                    <TableCell>{payment.payment_method || "N/A"}</TableCell>
-                    <TableCell>
-                      {new Date(payment.created_at).toLocaleDateString()}
-                    </TableCell>
+                    {!isMobile && (
+                      <TableCell>{payment.payment_method || "N/A"}</TableCell>
+                    )}
+                    {!isMobile && (
+                      <TableCell>
+                        {new Date(payment.created_at).toLocaleDateString()}
+                      </TableCell>
+                    )}
                     {user?.role.rolename === "User" &&
                       payment.status !== "completed" &&
                       payment.status !== "refunded" &&
@@ -136,9 +138,10 @@ const PaymentsTable = () => {
                           <Button
                             variant="contained"
                             color="primary"
+                            size={isMobile ? "small" : "medium"} // Smaller buttons for mobile
                             onClick={() => handlePayment(payment.request_id)}
                           >
-                            Pay Remaining 80%
+                            Pay 80%
                           </Button>
                         </TableCell>
                       )}

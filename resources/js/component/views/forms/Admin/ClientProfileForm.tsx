@@ -54,17 +54,17 @@ const ClientProfile = () => {
   }
   // https://custme.site/storage/app/public/images/3y7PgbCWjXmwPw2iDDeChRsYqbLZgNCNJ0723pFl.jpg
   const coverPhoto = profile.personal_information?.coverphoto
-    ? `https://custme.site/storage/app/public/images/${profile.personal_information.coverphoto}`
+    ? `http://127.0.0.1:8000/storage/${profile.personal_information.coverphoto}`
     : "default-cover-image-url";
 
   const profilePicture = profile.personal_information?.profilepicture
-    ? `https://custme.site/storage/app/public/images/${profile.personal_information.profilepicture}`
+    ? `http://127.0.0.1:8000/storage/${profile.personal_information.profilepicture}`
     : "default-profile-image-url";
 
   const images =
     profile.posts?.flatMap((post) =>
       post.images.map(
-        (image) => `https://custme.site/storage/app/public/images/${image.image_path}`
+        (image) => `http://127.0.0.1:8000/storage/${image.image_path}`
       )
     ) || [];
 

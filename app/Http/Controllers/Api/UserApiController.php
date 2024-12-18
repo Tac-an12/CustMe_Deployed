@@ -20,6 +20,9 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Notifications\CustomVerifyEmail;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
+use App\Events\NotificationEvent;
+
 
 
 class UserApiController extends Controller
@@ -201,6 +204,33 @@ class UserApiController extends Controller
 
         $this->saveFiles($request, 'certificate', 'certificates', $user->id);
         $this->saveFiles($request, 'portfolio', 'portfolios', $user->id);
+
+        $requestEntry = DB::table('requests')->insertGetId([
+            'request_type' => 'New Registration',
+            'status' => 'pending',
+            'user_id' => $user->id, // ID of the user who registered
+            'target_user_id' => 5, // Admin user ID
+            'request_content' => 'A new user (' . $user->username . ') has registered.',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        Log::info('Request created for admin about new registration.');
+    
+        // Step 6: Create a notification for the admin
+        $notification = DB::table('notifications')->insert([
+            'content' => 'A new ' . $user->role->rolename . ' (' . $user->username . ') has registered.',
+            'status' => 'unread',
+            'timestamp' => now(),
+            'user_id' => 5, // Admin user ID
+            'request_id' => $requestEntry, // Link to the request
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        Log::info('Notification created for admin about new registration.');
+
+        $notificationData = DB::table('notifications')->find($notification);
+
+        event(new NotificationEvent($notificationData));
 
 
 

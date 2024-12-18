@@ -28,30 +28,42 @@ export const SalesReportProvider: React.FC<{ children: React.ReactNode }> = ({
   const [error, setError] = useState<string | null>(null);
 
   const fetchSalesReport = async () => {
+    const authToken = localStorage.getItem("authToken");
+
+    if (!authToken) {
+      setError("Authorization token is missing");
+      return;
+    }
+
     setLoading(true);
     setError(null);
 
     try {
-    
-      // Make the API request with the Bearer token in the headers, if available
+      // Make the API request with the Bearer token in the headers
       const response = await apiService.get("/sales-report", {
         withCredentials: true,
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-        }
+          Authorization: `Bearer ${authToken}`,
+        },
       });
 
       setSalesReport(response.data);
-    } catch (err) {
-      setError(err.message || "Failed to fetch sales report");
+    } catch (err: any) {
+      setError(err.response?.data?.message || "Failed to fetch sales report");
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchSalesReport();
-  }, []);
+    const authToken = localStorage.getItem("authToken");
+
+    if (authToken) {
+      fetchSalesReport();
+    } else {
+      setError("Authorization token is missing");
+    }
+  }, []); // Only run on initial mount
 
   return (
     <SalesReportContext.Provider

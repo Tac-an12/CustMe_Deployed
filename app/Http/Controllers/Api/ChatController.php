@@ -44,45 +44,46 @@ class ChatController extends Controller
 }
 public function sendMessage(Request $request)
 {
-$request->validate([
-'content' => 'nullable|string',
-'receiver_id' => 'required|exists:users,id',
-'file' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-]);
-
-$startTime = microtime(true); // Start time
-
-// Initialize file path
-$filePath = null;
-
-// Handle file upload if present
-if ($request->hasFile('file')) {
-    $filePath = $request->file('file')->store('uploads', 'public');
-}
-
-// Check if content and file are both provided
-if ($request->filled('content') && $filePath) {
-    return response()->json(['error' => 'You cannot send a message with both text and a file.'], 400);
-}
-
-try {
-    $chat = Chat::create([
-        'content' => $request->input('content'),
-        'file_path' => $filePath,
-        'sender_id' => Auth::id(),
-        'receiver_id' => $request->input('receiver_id'),
+    $request->validate([
+        'content' => 'nullable|string',
+        'receiver_id' => 'required|exists:users,id',
+        'file' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
     ]);
 
-    // Broadcast the message event
-    broadcast(new MessageSent($chat))->toOthers();
+    $startTime = microtime(true); // Start time
 
-    $endTime = microtime(true); // End time
-    Log::info('Message sent on: ' . (($endTime - $startTime) * 1000) . ' ms'); // Log the time taken
+    // Initialize file path
+    $filePath = null;
 
-    return response()->json($chat, 201);
-} catch (\Exception $e) {
-    Log::error('Error sending message: ' . $e->getMessage());
-    return response()->json(['error' => 'An error occurred while sending the message.'], 500);
-}
+    try {
+        // Handle file upload if present
+        if ($request->hasFile('file')) {
+            $filePath = $request->file('file')->store('uploads', 'public');
+        }
+
+        // Ensure at least one of content or file is provided
+        if (!$request->filled('content') && !$filePath) {
+            return response()->json(['error' => 'Message must contain either text or a file.'], 400);
+        }
+
+        // Create chat message
+        $chat = Chat::create([
+            'content' => $request->input('content'),
+            'file_path' => $filePath,
+            'sender_id' => Auth::id(),
+            'receiver_id' => $request->input('receiver_id'),
+        ]);
+
+        // Broadcast the message event
+        broadcast(new MessageSent($chat))->toOthers();
+
+        $endTime = microtime(true); // End time
+        Log::info('Message sent on: ' . (($endTime - $startTime) * 1000) . ' ms'); // Log the time taken
+
+        return response()->json($chat, 201);
+    } catch (\Exception $e) {
+        Log::error('Error sending message: ' . $e->getMessage());
+        return response()->json(['error' => 'An error occurred while sending the message.'], 500);
+    }
 }
 }

@@ -4,6 +4,8 @@ import { useArtistAndProvider } from '../../../context/Artist&ProviderContext'; 
 import { useNavigate } from "react-router-dom";
 import Header from '../components/header'; // Import Header component
 
+const defaultProfilePicture = "https://via.placeholder.com/200x200.png?text=%3F";
+
 const MeetTheTeam = () => {
   const { profiles, fetchArtistAndProviderProfiles, loading } = useArtistAndProvider();
   const [currentPageDesigners, setCurrentPageDesigners] = useState(1); // State for pagination of designers
@@ -51,6 +53,57 @@ const MeetTheTeam = () => {
     return <div>Loading...</div>;
   }
 
+  const SeeMoreText = ({ text }: { text: string }) => {
+    const [isTruncated, setIsTruncated] = useState(true);
+    const toggleTruncate = () => setIsTruncated(!isTruncated);
+  
+    return (
+      <div>
+        <Typography variant="body2">
+          {isTruncated ? text.substring(0, 10) : text} {" "}
+          <span
+            style={{ color: 'blue', cursor: 'pointer' }}
+            onClick={toggleTruncate}
+          >
+            {isTruncated ? "... See More" : " See Less"}
+          </span>
+        </Typography>
+      </div>
+    );
+  };
+
+  const renderCardContent = (profile) => (
+    <CardContent>
+      <Typography variant="h5" component="div" className="text-lg font-semibold">
+        {profile.username}
+      </Typography>
+      <Typography variant="body2" color="text.secondary" className="text-gray-500">
+        {profile.role_name}
+      </Typography>
+      <Typography variant="body2" color="text.secondary" className="mt-4 text-gray-700">
+        {profile.personal_information.zipcode}
+      </Typography>
+      <Typography variant="body2" color="text.secondary" className="text-blue-500 mt-2">
+        {profile.email}
+      </Typography>
+
+      {/* Display the "About Me" content */}
+      <SeeMoreText text={profile.about_me_content || 'No about me content available.'} />
+
+      {/* Display the rating */}
+      <div className="mt-4">
+        <Typography variant="body2" color="text.secondary">
+          Rating:
+        </Typography>
+        <Rating
+          value={profile.average_rating || 0}
+          readOnly
+          precision={0.5}
+        />
+      </div>
+    </CardContent>
+  );
+
   return (
     <div className="container mx-auto p-4">
       {/* Add Header component here */}
@@ -68,45 +121,15 @@ const MeetTheTeam = () => {
                   <CardMedia
                     component="img"
                     height="200"
-                    image={`https://custme.site/storage/app/public/images/${profile.personal_information.profilepicture}`}
+                    image={profile.personal_information.profilepicture ? `http://127.0.0.1:8000/storage/${profile.personal_information.profilepicture}` : defaultProfilePicture}
                     alt={profile.username}
                   />
-                  <CardContent>
-                    <Typography variant="h5" component="div" className="text-lg font-semibold">
-                      {profile.username}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" className="text-gray-500">
-                      {profile.role_name}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" className="mt-4 text-gray-700">
-                      {profile.personal_information.zipcode}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" className="text-blue-500 mt-2">
-                      {profile.email}
-                    </Typography>
-                    
-                    {/* Display the "About Me" content */}
-                    <Typography variant="body2" color="text.secondary" className="mt-4 text-gray-700">
-                      {profile.about_me_content ? profile.about_me_content : 'No about me content available.'}
-                    </Typography>
-
-                    {/* Display the rating for the designer */}
-                    <div className="mt-4">
-                      <Typography variant="body2" color="text.secondary">
-                        Rating:
-                      </Typography>
-                      <Rating
-                        value={profile.average_rating || 0} // Use the average_rating to display the stars
-                        readOnly
-                        precision={0.5} // You can adjust this precision if needed
-                      />
-                    </div>
-                  </CardContent>
+                  {renderCardContent(profile)}
                   <Button
                     variant="contained"
                     color="primary"
                     className="w-full"
-                    onClick={() => navigate(`/clients/${profile.id}/profile`)} // Navigate to the profile page of the selected user
+                    onClick={() => navigate(`/clients/${profile.id}/profile`)}
                   >
                     VIEW PROFILE
                   </Button>
@@ -148,47 +171,17 @@ const MeetTheTeam = () => {
                   <CardMedia
                     component="img"
                     height="200"
-                    image={`https://custme.site/storage/app/public/images/${profile.personal_information.profilepicture}`}
+                    image={profile.personal_information.profilepicture ? `http://127.0.0.1:8000/storage/${profile.personal_information.profilepicture}` : defaultProfilePicture}
                     alt={profile.username}
                   />
-                  <CardContent>
-                    <Typography variant="h5" component="div" className="text-lg font-semibold">
-                      {profile.username}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" className="text-gray-500">
-                      {profile.role_name}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" className="mt-4 text-gray-700">
-                      {profile.personal_information.zipcode}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" className="text-blue-500 mt-2">
-                      {profile.email}
-                    </Typography>
-
-                    {/* Display the "About Me" content */}
-                    <Typography variant="body2" color="text.secondary" className="mt-4 text-gray-700">
-                      {profile.about_me_content ? profile.about_me_content : 'No about me content available.'}
-                    </Typography>
-
-                    {/* Display the rating for the provider */}
-                    <div className="mt-4">
-                      <Typography variant="body2" color="text.secondary">
-                        Rating:
-                      </Typography>
-                      <Rating
-                        value={profile.average_rating || 0} // Use the average_rating to display the stars
-                        readOnly
-                        precision={0.5} // You can adjust this precision if needed
-                      />
-                    </div>
-                  </CardContent>
+                  {renderCardContent(profile)}
                   <Button
                     variant="contained"
                     color="primary"
                     className="w-full"
-                    onClick={() => navigate(`/clients/${profile.id}/profile`)} // Navigate to the profile page of the selected user
+                    onClick={() => navigate(`/clients/${profile.id}/profile`)}
                   >
-                    Contact
+                    VIEW PROFILE
                   </Button>
                 </Card>
               </div>

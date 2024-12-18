@@ -94,9 +94,9 @@ const ChatForm: React.FC = () => {
             <div className="col-span-12 lg:col-span-5 xl:col-span-3 border-r h-full">
               <List>
                 {userChatList.length > 0 ? (
-                  userChatList.map((chat) => (
+                  userChatList.map((chat, index) => (
                     <ListItem
-                      key={chat.id}
+                      key={chat.id ? `${chat.id}-${index}` : `user-${index}`} // Combine id and index for uniqueness
                       component="div"
                       className={`border-b hover:bg-gray-100 ${selectedChatUser?.id === chat.id ? 'bg-gray-200' : ''}`}
                       onClick={() => {
@@ -148,8 +148,11 @@ const ChatForm: React.FC = () => {
               {/* Chat Messages */}
               <div className="chat-messages p-4 flex-grow overflow-y-auto" style={{ height: "400px", overflowY: "auto" }}>
                 {filteredMessages.length > 0 ? (
-                  filteredMessages.map((chat) => (
-                    <div key={chat.id} className={`flex ${chat.sender_id === user?.id ? "justify-end" : "justify-start"} mb-2`}>
+                  filteredMessages.map((chat, index) => (
+                    <div
+                      key={chat.id ? `${chat.id}-${index}` : `message-${index}`} // Combine id and index for uniqueness
+                      className={`flex ${chat.sender_id === user?.id ? "justify-end" : "justify-start"} mb-2`}
+                    >
                       <div className={`p-2 rounded-lg max-w-xs ${chat.sender_id === user?.id ? "bg-blue-500 text-white" : "bg-gray-200"}`}>
                         {chat.content && <div>{chat.content}</div>}
                         {chat.file_path && (

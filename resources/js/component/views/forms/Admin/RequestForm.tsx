@@ -6,7 +6,15 @@ import { useLocation } from 'react-router-dom';
 import Header from '../components/header';
 
 const RequestForm: React.FC = () => {
-    const { notifications, acceptNotification, declineNotification, userAccept, userDecline, selectedNotification, setSelectedNotification } = useNotification();
+    const {
+        notifications,
+        acceptNotification,
+        declineNotification,
+        userAccept,
+        userDecline,
+        selectedNotification,
+        setSelectedNotification,
+    } = useNotification();
     const { user } = useAuth(); // Access user info, including role
     const [isModalOpen, setModalOpen] = useState(false);
 
@@ -22,6 +30,10 @@ const RequestForm: React.FC = () => {
 
     const isDesignerOrProviderRole = () => {
         return user && (user.role.rolename === 'Printing Shop' || user.role.rolename === 'Graphic Designer');
+    };
+
+    const isAdminRole = () => {
+        return user && user.role.rolename === 'Admin';
     };
 
     const handleNotificationClick = (notification: any) => {
@@ -73,7 +85,7 @@ const RequestForm: React.FC = () => {
                                 <Divider sx={{ my: 1 }} />
 
                                 {/* Show buttons based on status and user role */}
-                                {status === 'pending' && (
+                                {!isAdminRole() && status === 'pending' && (
                                     <Box display="flex" gap={1}>
                                         {/* Conditional button rendering for Designers/Printing Shops */}
                                         {isDesignerOrProviderRole() && (
@@ -83,7 +95,7 @@ const RequestForm: React.FC = () => {
                                                     color="primary"
                                                     onClick={(e) => {
                                                         e.stopPropagation();
-                                                        acceptNotification(id, request_id);  // Designer or Printing Shop Accept
+                                                        acceptNotification(id, request_id); // Designer or Printing Shop Accept
                                                     }}
                                                     className="bg-blue-500 hover:bg-blue-600"
                                                 >
@@ -94,7 +106,7 @@ const RequestForm: React.FC = () => {
                                                     color="secondary"
                                                     onClick={(e) => {
                                                         e.stopPropagation();
-                                                        declineNotification(id, request_id);  // Designer or Printing Shop Decline
+                                                        declineNotification(id, request_id); // Designer or Printing Shop Decline
                                                     }}
                                                     className="border-red-500 text-red-500 hover:bg-red-500 hover:text-white"
                                                 >
@@ -111,7 +123,7 @@ const RequestForm: React.FC = () => {
                                                     color="primary"
                                                     onClick={(e) => {
                                                         e.stopPropagation();
-                                                        userAccept(id, request_id);  // User Accept
+                                                        userAccept(id, request_id); // User Accept
                                                     }}
                                                     className="bg-blue-500 hover:bg-blue-600"
                                                 >
@@ -122,7 +134,7 @@ const RequestForm: React.FC = () => {
                                                     color="secondary"
                                                     onClick={(e) => {
                                                         e.stopPropagation();
-                                                        userDecline(id, request_id);  // User Decline
+                                                        userDecline(id, request_id); // User Decline
                                                     }}
                                                     className="border-red-500 text-red-500 hover:bg-red-500 hover:text-white"
                                                 >

@@ -3,10 +3,9 @@
 namespace App\Events;
 
 use Illuminate\Broadcasting\Channel;
-use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
-use Illuminate\Support\Facades\Log;
 
 class NotificationEvent implements ShouldBroadcast
 {
@@ -16,17 +15,16 @@ class NotificationEvent implements ShouldBroadcast
 
     public function __construct($notification)
     {
-        Log::info('Notification Event Data: ', (array) $notification);
         $this->notification = $notification;
     }
 
     public function broadcastOn()
     {
-        return new Channel('notifications');
+        return new Channel('notifications'); // Channel name
     }
 
     public function broadcastAs()
     {
-        return 'new-notification';
+        return 'new-notification'; // Event name
     }
 }

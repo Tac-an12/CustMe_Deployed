@@ -9,9 +9,9 @@
 
     @if (app()->environment('production'))
         <!-- Use the static compiled CSS from build/ in production -->
-        <link rel="stylesheet" href="{{ asset('build/assets/app-BW39WIU0.css') }}">
+        <link rel="stylesheet" href="{{ asset(mix('build/assets/app.css')) }}">
     @else
-        <!-- Vite CSS in development -->
+        <!-- Use Vite CSS during development -->
         @vite('resources/css/app.css')
     @endif
 </head>
@@ -19,13 +19,14 @@
 <body>
     <div id="root"></div>
 
-    @if (app()->environment('production'))
+     <!-- Dynamically load JS -->
+     @if (app()->environment('production'))
         <!-- Use the static compiled JS from build/ in production -->
-        <script src="{{ asset('build/assets/app-BHKo-1Ow.js') }}"></script>
+        <script src="{{ asset(mix('build/assets/app.js')) }}"></script>
     @else
-        <!-- Vite JS in development -->
+        <!-- Use Vite JS during development -->
         @viteReactRefresh
-        @vite('resources/js/app.ts')
+        @vite('resources/js/app.tsx')
     @endif
 </body>
 

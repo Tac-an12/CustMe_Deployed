@@ -233,7 +233,7 @@ const EditPostForm: React.FC = () => {
                   {existingImages.map((image) => (
                     <div key={image.image_id} className="relative inline-block mr-2 mb-2">
                       <img
-                        src={`https://custme.site/storage/app/public/images/${image.image_path}`}
+                        src={`https://custme.site/storage/app/public/${image.image_path}`}
                         alt={`Existing Preview`}
                         className="w-32 h-32 object-cover rounded"
                       />
