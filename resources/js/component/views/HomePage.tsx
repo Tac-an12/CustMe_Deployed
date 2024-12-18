@@ -45,7 +45,7 @@ const HomePage = () => {
             <p className="text-black font-normal mt-4 text-xl">
               Connect with Designers and Printing providers.
             </p>
-            <div className="flex space-x-6 mt-7">
+            <div className="flex-justify-center space-x-6 mt-7">
               {/* Sign-up Button */}
               <Button 
                 onClick={handleSignUp} 
@@ -78,8 +78,8 @@ const HomePage = () => {
 
         {/* Services Section */}
         <div className="flex flex-col items-center py-16 bg-white text-black">
-          <h1 className="text-3xl font-semibold text-left mb-6 mt-2">
-            Your One-Stop Solution for Custom Designs and Printing Services
+          <h1 className="text-3xl font-semibold text-center mb-8 mt-2">
+          Your One-Stop Solution for <br /> Custom Designs and Printing Services
           </h1>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 w-full max-w-6xl pt-8">
             <ServiceItem
@@ -115,23 +115,23 @@ const HomePage = () => {
         </div>
 
         {/* Services Section */}
-        <div id="services" className="min-h-screen flex flex-col items-center rounded-lg justify-center bg-white">
-          <h2 className="text-4xl font-bold mb-8">CustMe Services</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 w-20 md:w-auto">
-            <ServiceCard
-              title="Design Services"
-              description="Connect with freelance designers to create unique, personalized designs tailored to your needs."
-              buttonText="Explore Design Services"
-              imageUrl="https://i.pinimg.com/originals/e5/29/ae/e529ae5785e684063b0ecf58137078b6.png"
-            />
-            <ServiceCard
-              title="Printing Services"
-              description="Access a wide range of high-quality printing options to bring your designs to life, from digital prints to eco-friendly solutions."
-              buttonText="Explore Printing Options"
-              imageUrl="https://image.freepik.com/free-vector/digital-printing-concept-illustration_23-2148470662.jpg"
-            />
-          </div>
-        </div>
+        <div id="services" className="min-h-screen flex flex-col items-center justify-center bg-white py-16">
+  <h1 className="text-3xl font-semibold mb-8 text-center">CustMe Services</h1>
+  <div className="flex flex-wrap justify-center gap-8 w-full max-w-6xl px-4">
+    <ServiceCard
+      title="Design Services"
+      description="Connect with freelance designers to create unique, personalized designs tailored to your needs."
+      imageUrl="https://i.pinimg.com/originals/e5/29/ae/e529ae5785e684063b0ecf58137078b6.png"
+    />
+    <ServiceCard
+      title="Printing Services"
+      description="Access a wide range of high-quality printing options to bring your designs to life, from digital prints to eco-friendly solutions."
+      imageUrl="https://image.freepik.com/free-vector/digital-printing-concept-illustration_23-2148470662.jpg"
+    />
+  </div>
+</div>
+
+
 
         {/* Simple Footer */}
         <footer className="bg-gray-100 py-4 border-t border-gray-200">
@@ -167,45 +167,34 @@ const HomePage = () => {
   );
 };
 
-// ServiceItem Component
 const ServiceItem = ({ icon, text }) => (
   <div className="flex flex-col items-center text-center bg-white p-6 rounded-lg shadow-md hover:bg-blue-100 transition-colors duration-300">
     {icon}
-    <p className="text-lg font-medium mt-4">
-      {text}
-    </p>
+    <p className="text-lg font-medium mt-4">{text}</p>
   </div>
 );
 
-// ServiceCard Component
-const ServiceCard = ({ title, description, buttonText, imageUrl }) => {
+const ServiceCard = ({ title, description, imageUrl }) => {
   return (
-    <Card className="shadow-lg w-full md:w-80 min-h-full h-auto flex flex-col">
-      <div className="relative w-full h-87 md:h-60 lg:h-99">
+    <Card className="shadow-lg w-full max-w-sm sm:max-w-md md:max-w-lg flex flex-col">
+      <div className="relative w-full h-64 sm:h-72 md:h-80 flex items-center justify-center">
         <img
           src={imageUrl}
           alt={title}
-          className="object-cover w-full h-full"
+          className="object-cover w-full h-full rounded-t-lg"
         />
       </div>
-      <CardContent className="flex-grow text-center p-4">
-        <Typography variant="h5" component="div">
+      <CardContent className="flex flex-col items-center py-6 px-4">
+        <Typography variant="h6" className="font-semibold mb-4 text-center text-sm sm:text-base md:text-lg">
           {title}
         </Typography>
-        <Typography variant="body2" color="text.secondary" className="mt-2">
+        <Typography variant="body2" color="textSecondary" className="text-center text-xs sm:text-sm md:text-base">
           {description}
         </Typography>
       </CardContent>
-      <CardActions className="justify-center p-2">
-        <Button
-          variant="contained"
-          className="w-full justify-center rounded-md bg-blue-600 px-3 py-1 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-yellow-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-        >
-          {buttonText}
-        </Button>
-      </CardActions>
     </Card>
   );
 };
+
 
 export default HomePage;

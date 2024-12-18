@@ -95,10 +95,10 @@ const AppRoutes = () => {
         <Route path="/chats" element={<ChatForm />} />
         <Route path="/users/:id/profile" element={<UserProfileForm />} />
 
-        <Route
+        {/* <Route
           path="/List-of-Desinger&Printing-Provider"
           element={<ArtistPrintingProviders />}
-        />
+        /> */}
         <Route path="/posts" element={<CreatePostForm />} />
         <Route path="/provider/:id/profile" element={<UserProfileForm />} />
         <Route path="/notifications" element={<RequestForm />} />

@@ -59,11 +59,11 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ open, onClose }) =>
 
     // Current images URLs
     const currentProfilePicture = profile?.personal_information.profilepicture
-        ? `http://127.0.0.1:8000/storage/${profile.personal_information.profilepicture}`
+        ? `https://custme.site/storage/app/public/${profile.personal_information.profilepicture}`
         : null;
 
     const currentCoverPhoto = profile?.personal_information.coverphoto
-        ? `http://127.0.0.1:8000/storage/${profile.personal_information.coverphoto}`
+        ? `https://custme.site/storage/app/public/${profile.personal_information.coverphoto}`
         : null;
 
     if (!profile) {

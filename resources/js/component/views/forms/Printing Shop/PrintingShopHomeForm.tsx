@@ -224,7 +224,7 @@ const ImageCarousel: React.FC<{ images: Image[] }> = ({ images }) => {
         &#8249;
       </button>
       <img
-        src={`http://127.0.0.1:8000/storage/${images[currentIndex].image_path}`}
+        src={`https://custme.site/storage/app/public/${images[currentIndex].image_path}`}
         alt={`Post Image ${images[currentIndex].image_id}`}
         className="w-full h-full object-cover"
       />

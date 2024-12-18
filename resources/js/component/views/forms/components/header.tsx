@@ -27,6 +27,13 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import MapIcon from '@mui/icons-material/Map';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import DescriptionIcon from '@mui/icons-material/Description';
+import GroupIcon from '@mui/icons-material/Group'; 
+import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile'; 
+import ExitToAppIcon from '@mui/icons-material/ExitToApp'; 
+import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt'; 
+
+
+
 
 interface HeaderProps {
   onLocationSelect?: (location: any) => void;
@@ -69,59 +76,102 @@ const Header: React.FC<HeaderProps> = ({ onLocationSelect, onPostSearchSelect })
   return (
     <>
       {/* AppBar */}
-      <AppBar position="fixed" color="inherit" elevation={1} sx={{ backgroundColor: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}>
-        <Toolbar sx={{ justifyContent: 'space-between', px: { xs: 1, sm: 2 } }}>
-          <IconButton
-            edge="start"
-            aria-label="menu"
-            onClick={toggleSidebar}
-            sx={{ marginRight: 2, color: 'black' }}
-          >
-            <MenuIcon />
-          </IconButton>
+      {/* AppBar */}
+<AppBar
+  position="fixed"
+  color="inherit"
+  elevation={1}
+  sx={{
+    backgroundColor: '#fff',
+    zIndex: (theme) => theme.zIndex.drawer + 1,
+    paddingX: { xs: 1, sm: 2 }, // Adjust padding for mobile and desktop
+  }}
+>
+  <Toolbar
+    sx={{
+      justifyContent: 'space-between',
+      px: { xs: 1, sm: 2 },
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      height: { xs: '56px', sm: '64px' }, // Adjust toolbar height for mobile and desktop
+    }}
+  >
+    {/* Menu Icon for Sidebar */}
+    <IconButton
+      edge="start"
+      aria-label="menu"
+      onClick={toggleSidebar}
+      sx={{
+        marginRight: 2,
+        color: 'black',
+        display: { xs: 'block', sm: 'block' },
+      }}
+    >
+      <MenuIcon />
+    </IconButton>
 
-          <Box display="flex" alignItems="center" sx={{ flexGrow: 2 }}>
-            <Box 
-              className="text-black font-extrabold" 
-              sx={{ 
-                fontSize: { xs: '1.5rem', sm: '2rem', md: '3rem' }, // Responsive font sizes
-                ml: { xs: 1, sm: 2 } // Responsive margin
+    {/* Logo */}
+    <Box display="flex" alignItems="center" sx={{ flexGrow: 2 }}>
+  <Box
+    className="text-black font-extrabold"
+    sx={{
+      fontSize: { xs: '1.5rem', sm: '1.5rem', md: '2rem' }, // Font size adjustments for responsiveness
+      ml: { xs: 0, sm: 2 }, // Remove margin for mobile (xs), added margin for larger screens (sm and above)
+      display: 'flex',
+      
+      justifyContent: { xs: 'flex-start',}, // Align left for mobile, center for larger screens
+    }}
+  >
+    <span className="text-blue-500">C</span>
+    <span className="text-blue-500">u</span>
+    <span className="text-blue-500">s</span>
+    <span className="text-yellow-500">t</span>
+    <span className="text-blue-500">M</span>
+    <span className="text-yellow-500">e</span>
+  </Box>
+</Box>
+
+
+    {/* Conditional Search Bar */}
+    {window.location.href === 'http://127.0.0.1:8000/getlocation' && (
+      <SearchBar onLocationSelect={onLocationSelect} />
+    )}
+
+    {(location.pathname === '/dashboard' ||
+      location.pathname === '/designerpost' ||
+      location.pathname === '/providerpost') && (
+      <PostSearchBar onPostSelect={onPostSearchSelect} />
+    )}
+
+    {/* Profile & Notifications */}
+    <Box display="flex" alignItems="center" sx={{ ml: 'auto' }}>
+      <NotificationsDropdown />
+
+      {user && (
+        <Box ml={2}>
+          <NavLink to={`/clients/${user.id}/profile`}>
+            <Avatar
+              src={`https://custme.site/storage/${
+                user.personal_information?.profilepicture || 'images/default-profile.png'
+              }`}
+              alt="Profile"
+              sx={{
+                width: 40,
+                height: 40,
+                borderRadius: '50%',
+                '&:hover': {
+                  cursor: 'pointer',
+                },
               }}
-            >
-              <span className="text-blue-500">C</span>
-              <span className="text-blue-500">u</span>
-              <span className="text-blue-500">s</span>
-              <span className="text-yellow-500">t</span>
-              <span className="text-blue-500">M</span>
-              <span className="text-yellow-500">e</span>
-            </Box>
-          </Box>
-          {/* Replace the original search bar code with the imported SearchBar component */}
-          {window.location.href === "http://127.0.0.1:8000/getlocation" && (
-            <SearchBar onLocationSelect={onLocationSelect} />
-          )}
+            />
+          </NavLink>
+        </Box>
+      )}
+    </Box>
+  </Toolbar>
+</AppBar>
 
-          {(location.pathname === '/dashboard' || location.pathname === '/designerpost' || location.pathname === '/providerpost') && (
-            <PostSearchBar onPostSelect={onPostSearchSelect} />
-          )}
-
-          <Box display="flex" alignItems="center" sx={{ ml: 'auto' }}>
-            <NotificationsDropdown />
-
-            {user && (
-              <Box ml={2}>
-                <NavLink to={`/clients/${user.id}/profile`}>
-                  <Avatar
-                    src={`http://127.0.0.1:8000/storage/${user.personal_information?.profilepicture || 'images/default-profile.png'}`}
-                    alt="Profile"
-                    sx={{ width: 40, height: 40 }}
-                  />
-                </NavLink>
-              </Box>
-            )} 
-          </Box>
-        </Toolbar>
-      </AppBar>
 
       {/* Sidebar with Overlay */}
       <Drawer
@@ -244,6 +294,17 @@ const Header: React.FC<HeaderProps> = ({ onLocationSelect, onPostSearchSelect })
               </NavLink>
             )}
 
+{isUserRole() && (
+              <NavLink to="/user" className="text-white">
+                <ListItem>
+                  <ListItemIcon sx={{ color: 'white' }}>
+                  <InsertDriveFileIcon />
+                  </ListItemIcon>
+                  {isSidebarExpanded && <ListItemText primary="My Post" />}
+                </ListItem>
+              </NavLink>
+            )}
+
             {isMultipleRole() && (
               <NavLink to="/posts" className="text-white">
                 <ListItem>
@@ -271,9 +332,9 @@ const Header: React.FC<HeaderProps> = ({ onLocationSelect, onPostSearchSelect })
             <NavLink to="/meet-the-team" className="text-white">
               <ListItem>
                 <ListItemIcon sx={{ color: 'white' }}>
-                  <MapIcon />
+                <GroupIcon />
                 </ListItemIcon>
-                {isSidebarExpanded && <ListItemText primary="Designer&Provider" />}
+                {isSidebarExpanded && <ListItemText primary="Designer & Provider" />}
               </ListItem>
             </NavLink>
           )}
@@ -303,7 +364,7 @@ const Header: React.FC<HeaderProps> = ({ onLocationSelect, onPostSearchSelect })
           <Box sx={{ mt: 'auto', display: 'flex', justifyContent: 'center' }}>
             <ListItem onClick={handleLogout} sx={{ color: 'white' }}>
               <ListItemIcon sx={{ color: 'white' }}>
-                <FaSignOutAlt />
+              <ExitToAppIcon />
               </ListItemIcon>
               {isSidebarExpanded && <ListItemText primary="Logout" />}
             </ListItem>

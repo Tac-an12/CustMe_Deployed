@@ -13,5 +13,4 @@ Route::get('/{path?}', function () {
 //     Route::post('/task', [TaskApiController::class, 'saveTask']);
 // });
 
-Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLinkEmail']);
-Route::get('/reset-password', [PasswordResetController::class, 'reset'])->name('password.reset');
+

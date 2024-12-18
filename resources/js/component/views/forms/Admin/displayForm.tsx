@@ -73,9 +73,10 @@ const DisplayForm: React.FC = () => {
     const filteredPosts = filterPosts(posts, query); // Use the search query from context
     const postsToDisplay = filteredPosts.slice(0, 4); // Display only the first 4 filtered posts
     return (
-      <div className="mt-10 mb-8">
+      <div className="mt-6 mb-10">
+        
         <Typography variant="h5" className="mb-4 font-bold">{title}</Typography>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 justify-center">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-6 mb-8 justify-center">
           {postsToDisplay.length > 0 ? (
             postsToDisplay.map((post) => (
               <Card key={post.post_id} className="shadow-lg w-full">
@@ -91,7 +92,7 @@ const DisplayForm: React.FC = () => {
                     <img
                       src={
                         post.user.personal_information?.profilepicture
-                          ? `http://127.0.0.1:8000/storage/${post.user.personal_information.profilepicture}`
+                          ? `https://custme.site/storage/app/public/images/${post.user.personal_information.profilepicture}`
                           : "https://via.placeholder.com/40"
                       }
                       alt="Profile"
@@ -196,14 +197,17 @@ const DisplayForm: React.FC = () => {
             <Typography variant="body1" color="textSecondary">
               No posts available.
             </Typography>
+            
           )}
+        
         </div>
-        <div className="flex justify-center mt-4">
+        <div className="flex justify-end mt-4">
           <Button variant="contained" color="primary" onClick={() => navigate(link)}>
             See More
           </Button>
         </div>
       </div>
+      
     );
   };
 
@@ -252,14 +256,20 @@ const DisplayForm: React.FC = () => {
       }
     }
   };
-
+  // <div className="flex bg-gray-100 min-h-screen">
+  // <div className="flex-1 flex flex-col">
+  // <Header />
+  // <div className="flex-grow p-4">
+  //   <PostsSearchBar />
+  //   {filteredPosts && renderPosts(filteredPosts, "Designer Posts")}
+  // </div>
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex-grow flex flex-col">
+       <PostsSearchBar/> {/* Updated to use onSearch */}
      <Header />
     <div className="flex-grow p-4">
-      <PostsSearchBar/> {/* Updated to use onSearch */}
       {renderPosts(designerPosts, "Designer Posts", "/designerpost")}
-      {renderPosts(providerPosts, "Provider Posts", "/providerpost")}
+      {renderPosts(providerPosts, "Printing Provider Posts", "/providerpost")}
     </div>
       <RequestModal
         open={modalOpen}
@@ -309,24 +319,24 @@ const ImageCarousel: React.FC<{ images: Image[] }> = ({ images }) => {
 
   return (
     <div className="relative w-full h-48">
-      <button
-        onClick={prevImage}
-        className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-transparent text-white px-2 py-1 rounded-full focus:outline-none hover:bg-gray-700 hover:bg-opacity-70 transition"
-      >
-        &#8249;
-      </button>
-      <img
-        src={`http://127.0.0.1:8000/storage/${images[currentIndex].image_path}`}
-        alt={`Post Image ${images[currentIndex].image_id}`}
-        className="w-full h-full object-cover"
-      />
-      <button
-        onClick={nextImage}
-        className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-transparent text-white px-2 py-1 rounded-full focus:outline-none hover:bg-gray-800"
-      >
-        &#8250;
-      </button>
-    </div>
+    <button
+      onClick={prevImage}
+      className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-transparent text-black text-4xl px-2 py-3 rounded-full focus:outline-none hover:bg-gray-700 hover:bg-opacity-80 transition-all"
+    >
+      &#8249;
+    </button>
+    <img
+      src={`https://custme.site/storage/app/public/${images[currentIndex].image_path}`}
+      alt={`Post Image ${images[currentIndex].image_id}`}
+      className="w-full h-full object-cover"
+    />
+    <button
+      onClick={nextImage}
+      className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-transparent text-black text-4xl px-2 py-3 rounded-full focus:outline-none hover:bg-gray-800 hover:bg-opacity-80 transition-all"
+    >
+      &#8250;
+    </button>
+  </div>
   );
 };
 

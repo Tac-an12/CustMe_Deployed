@@ -52,19 +52,19 @@ const ClientProfile = () => {
   if (!profile) {
     return <Typography variant="body1">No profile found</Typography>;
   }
-
+  // https://custme.site/storage/app/public/images/3y7PgbCWjXmwPw2iDDeChRsYqbLZgNCNJ0723pFl.jpg
   const coverPhoto = profile.personal_information?.coverphoto
-    ? `http://127.0.0.1:8000/storage/${profile.personal_information.coverphoto}`
+    ? `https://custme.site/storage/app/public/images/${profile.personal_information.coverphoto}`
     : "default-cover-image-url";
 
   const profilePicture = profile.personal_information?.profilepicture
-    ? `http://127.0.0.1:8000/storage/${profile.personal_information.profilepicture}`
+    ? `https://custme.site/storage/app/public/images/${profile.personal_information.profilepicture}`
     : "default-profile-image-url";
 
   const images =
     profile.posts?.flatMap((post) =>
       post.images.map(
-        (image) => `http://127.0.0.1:8000/storage/${image.image_path}`
+        (image) => `https://custme.site/storage/app/public/images/${image.image_path}`
       )
     ) || [];
 
@@ -87,15 +87,14 @@ const ClientProfile = () => {
       <div className="flex justify-center mt-16 px-4 sm:px-8 bg-gray-50">
         <div className="w-full max-w-4xl">
           <Box className="relative bg-white shadow-lg rounded-lg overflow-hidden mb-6">
-            {/* Cover photo section */}
-            <div className="relative h-48 w-full">
-              <img
-                src={coverPhoto}
-                alt="Cover"
-                className="object-cover w-full h-full"
-              />
-            </div>
-
+           {/* Cover photo section */}
+<div className="relative w-full h-64"> {/* Increased height to h-64 */}
+  <img
+    src={coverPhoto}
+    alt="Cover"
+    className="object-cover w-full h-full" // Ensures the image covers the entire container
+  />
+</div>
             {/* Profile picture */}
             <div className="relative -mt-12 mx-auto w-32 h-32">
               <Avatar
@@ -107,7 +106,7 @@ const ClientProfile = () => {
             </div>
 
             {/* User details section */}
-            <div className="pt-12 pb-6 px-6">
+            <div className="pt-8 pb-6 px-6">
               <Typography variant="h5" className="font-bold text-center">
                 {`${profile.personal_information?.firstname || ""} ${
                   profile.personal_information?.lastname || ""
@@ -159,7 +158,7 @@ const ClientProfile = () => {
                 variant="fullWidth"
               >
                 <Tab label="Profile" />
-                <Tab label="Rating" /> {/* Add Rating tab */}
+                {!isUserRole && <Tab label="Rating" />}
               </Tabs>
             </Toolbar>
           </AppBar>
@@ -187,27 +186,62 @@ const ClientProfile = () => {
                 )}
 
                 {/* Image Carousel Section */}
-                {isAllowedRole && (
+             
                   <Box flex={1} className="shadow-lg rounded-lg p-2 bg-white">
-                    <Typography variant="h6" gutterBottom>
-                      Image Gallery
-                    </Typography>
-                    <Carousel>
-                      {images.map((src, index) => (
+                  <Typography variant="h6" gutterBottom>
+                    Image Gallery
+                  </Typography>
+                  <Carousel>
+                    {images.map((src, index) => (
+                      <div
+                        key={index}
+                        className="relative w-full h-[400px] overflow-hidden rounded-md" // Set height and make it responsive
+                      >
                         <img
-                          key={index}
                           src={src}
                           alt={`Image ${index}`}
-                          className="w-full h-48 object-cover rounded-md"
+                          className="w-full h-full object-cover" // Ensure full coverage without distortion
                         />
-                      ))}
-                    </Carousel>
-                  </Box>
-                )}
+                      </div>
+                    ))}
+                  </Carousel>
+                  
+
+                  
+                </Box>
+                
+         
+
+                  {/* Image Carousel Section
+                  {isAllowedRole && (
+                  <Box flex={1} className="shadow-lg rounded-lg p-2 bg-white">
+                  <Typography variant="h6" gutterBottom>
+                    Image Gallery
+                  </Typography>
+                  <Carousel>
+                    {images.map((src, index) => (
+                      <div
+                        key={index}
+                        className="relative w-full h-[400px] overflow-hidden rounded-md" // Set height and make it responsive
+                      >
+                        <img
+                          src={src}
+                          alt={`Image ${index}`}
+                          className="w-full h-full object-cover" // Ensure full coverage without distortion
+                        />
+                      </div>
+                    ))}
+                  </Carousel>
+                  
+
+                  
+                </Box>
+                
+                )} */}
               </Box>
 
               {/* User Posts Section */}
-              {isUserRole && profile.posts?.length > 0 && (
+              {/* {isUserRole && profile.posts?.length > 0 && (
                 <div className="shadow-lg rounded-lg p-4">
                   <Typography variant="h6" gutterBottom>
                     Posts
@@ -228,7 +262,7 @@ const ClientProfile = () => {
                             height="180"
                             image={
                               post.images.length > 0
-                                ? `http://127.0.0.1:8000/storage/${post.images[0].image_path}`
+                                ? `https://custme.site/storage/app/public/images/${post.images[0].image_path}`
                                 : "default-image-url"
                             }
                             alt={post.title || "Post image"}
@@ -256,7 +290,7 @@ const ClientProfile = () => {
                     ))}
                   </Grid>
                 </div>
-              )}
+               )} */}
             </>
           )}
 

@@ -86,7 +86,7 @@ function AboutMe() {
         className="text-gray-800 font-bold mb-2"
         align="center"
       >
-        {profile?.username || "User"}
+       
       </Typography>
 
       <Box mb={2}>
@@ -96,7 +96,7 @@ function AboutMe() {
           display="inline"
           mr={1}
         >
-          Skills:
+          Services:
         </Typography>
         <Typography variant="body2" className="text-gray-600" display="inline">
           {tempData.skills}

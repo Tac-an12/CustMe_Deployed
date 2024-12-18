@@ -237,27 +237,26 @@ class RequestController extends Controller
     public function userAccept(Request $request, $requestId, $notificationId)
     {
         try {
-
+            $client = new Client();
             $userRequest = UserRequest::findOrFail($requestId);
             $userRequest->status = 'accepted';
             $userRequest->save();
-
+    
             $userId = auth()->id();
             Log::debug('User ID:', ['user_id' => $userId]);
-
+    
             $userRequest = UserRequest::findOrFail($requestId);
             Log::debug('User Request:', ['request_id' => $requestId, 'user_request' => $userRequest]);
-
+    
             $notification = Notification::findOrFail($notificationId); // Retrieve the notification
             Log::debug('Notification:', ['notification_id' => $notificationId, 'notification' => $notification]);
-
+    
             // Ensure the target user is a Graphic Designer or Printing Provider
             if ($userRequest->target_user_id !== $userId) {
                 Log::warning('Unauthorized user attempting to accept request', ['target_user_id' => $userRequest->target_user_id, 'user_id' => $userId]);
                 return response()->json(['error' => 'Unauthorized.'], 403);
             }
-
-            // Retrieve the initial payment record
+    
             $initialPayment = InitialPayment::where('request_id', $requestId)->first();
             if (!$initialPayment) {
                 Log::warning('Initial payment not found', ['request_id' => $requestId]);
@@ -269,10 +268,10 @@ class RequestController extends Controller
             $initialPayment->status = 'initiated';
             $initialPayment->save();
             Log::debug('Initial Payment Status Updated:', ['status' => 'initiated']);
-
+    
             // Check if price is available in the user request, otherwise get from the related post
             $price = $userRequest->price;
-
+    
             if ($price === null && $userRequest->post_id) {
                 // Fetch the price from the related Post using the foreign key post_id
                 $post = Post::find($userRequest->post_id);
@@ -284,58 +283,95 @@ class RequestController extends Controller
                     return response()->json(['error' => 'Price is missing in both the request and related post.'], 400);
                 }
             }
-
+    
             Log::debug('Price:', ['price' => $price]);
-
+    
             // Calculate 20% of the price
-            $paymentAmount = $price * 0.2;
+            $paymentAmount = $price * 0.20 * 100;
+            
             Log::debug('Calculated Payment Amount (20%):', ['payment_amount' => $paymentAmount]);
-
+    
             // Update the payment amount in InitialPayment
             $initialPayment->update([
-                'amount' => $paymentAmount,
+                'amount' => $paymentAmount / 100,
+            
             ]);
             Log::debug('Initial Payment Updated:', ['updated_payment_amount' => $paymentAmount]);
+    
+            // Create a PayMongo Checkout Session
+            $personalInformation = $request->user()->personalInformation; // Assuming you have a way to access this
+    
+            // Send a request to PayMongo to create a checkout session
+            $response = $client->post('https://api.paymongo.com/v1/checkout_sessions', [
+                'json' => [
+                    'data' => [
+                        'attributes' => [
+                            'amount' => $paymentAmount * 100,
+                            'currency' => 'PHP',
+                            'description' => 'Initial Payment for Post ' . $requestId,
+                            
+                            'send_email_receipt' => true, // Send email receipt
+                            'line_items' => [
+                                [
+                                    'name' => 'Product Purchase',
+                                    'description' => 'Initial 20% Payment for Post ' . $requestId,
+                                    'amount' => $paymentAmount,
+                                    'currency' => 'PHP',
+                                    'quantity' => 1
+                                ]
+                            ],
+                            'payment_method_types' => ['gcash', 'card'],
+                            'billing' => [
+                                'name' => $personalInformation->firstname . ' ' . $personalInformation->lastname,
+                                'email' => $request->user()->email, // Use the user's email for receipt
+                                'phone' => $personalInformation->zipcode,
 
-            // Create a PayMongo Checkout link
-            $payMongoResponse = Http::withHeaders([
-                'Authorization' => 'Basic ' . base64_encode(env('PAYMONGO_SECRET_KEY') . ':'),
-            ])->post('https://api.paymongo.com/v1/links', [
-                'data' => [
-                    'attributes' => [
-                        'amount' => $paymentAmount * 100, // Amount in cents
-                        'description' => 'Payment for request ' . $requestId,
-                        'payment_method' => 'gcash',
+                            ]
+                        ]
                     ]
-                ]
+                ],
+                'headers' => [
+                    'Authorization' => 'Basic ' . base64_encode(config('services.paymongo.secret_key') . ':'),
+                    'Content-Type' => 'application/json',
+                ],
             ]);
 
-            if ($payMongoResponse->failed()) {
-                Log::error('PayMongo API request failed', ['response' => $payMongoResponse->json()]);
-                return response()->json(['error' => 'Failed to create PayMongo link.'], 500);
+            $responseBody = json_decode($response->getBody(), true);
+
+            if (isset($responseBody['data']['id'])) {
+                // Retrieve the checkout session ID from PayMongo's response
+                $checkoutSessionId = $responseBody['data']['id']; // This is the unique session ID
+                $checkoutUrl = $responseBody['data']['attributes']['checkout_url'];
+
+                // Log the billing details for debugging
+                Log::debug('Retrieved billing details:', [
+                    'name' => $personalInformation->first_name . ' ' . $personalInformation->last_name,
+                    'email' => $request->user()->email,
+                    'phone' => $personalInformation->phone,
+                ]);
+
+                // Update the initial payment record with the checkout session ID in the transaction_id
+                $initialPayment->update([
+                    'transaction_id' => $checkoutSessionId, // Store the checkout_session_id in transaction_id
+                    'status' => 'initiated', // Set status as pending, or you can update as needed
+                ]);
+                $notification->update([
+                    'status' => 'accepted',
+                ]);
+
+                return response()->json([
+                    'checkout_url' => $checkoutUrl,
+                    'message' => 'Checkout session created successfully.',
+                ]);
+            } else {
+                Log::error('Failed to create checkout session: ' . json_encode($responseBody));
+                return response()->json(['error' => 'Failed to create checkout session'], 500);
             }
-
-            // Return the checkout URL to open in a separate window
-            $checkoutUrl = $payMongoResponse->json()['data']['attributes']['checkout_url'];
-            Log::debug('Checkout URL:', ['checkout_url' => $checkoutUrl]);
-
-            // Update the notification to mark the action taken (accepted)
-            $notification->update([
-                'status' => 'accepted',
-            ]);
-            Log::debug('Notification Updated:', ['notification_status' => 'accepted']);
-
-            return response()->json([
-                'message' => 'Request accepted successfully.',
-                'checkout_url' => $checkoutUrl
-            ]);
         } catch (\Exception $e) {
-            Log::error('Error in userAccept method', ['error' => $e->getMessage()]);
-            return response()->json(['error' => 'Error accepting the request: ' . $e->getMessage()], 500);
+            Log::error('Checkout session creation error: ' . $e->getMessage());
+            return response()->json(['error' => 'Payment initiation failed'], 500);
         }
     }
-
-
     public function userDecline(Request $request, $requestId, $notificationId)
     {
         try {

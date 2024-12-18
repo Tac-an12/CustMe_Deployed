@@ -182,7 +182,7 @@ const RegisterForm = () => {
   return (
     <>
       <div className="min-h-screen flex items-center justify-center">
-        <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
+        <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-2xl">
           <div className="text-black font-extrabold text-4xl text-center">
             <span className="text-blue-500">C</span>
             <span className="text-blue-500">u</span>

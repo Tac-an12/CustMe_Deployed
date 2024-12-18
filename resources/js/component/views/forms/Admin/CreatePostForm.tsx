@@ -17,7 +17,7 @@ const CreatePostForm: React.FC = () => {
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
   const [price, setPrice] = useState<number | ''>('');
-  const [quantity, setQuantity] = useState<number | ''>('');
+  // const [quantity, setQuantity] = useState<number | ''>('');
   const [images, setImages] = useState<File[]>([]);
   const [tags, setTags] = useState<Tag[]>([]);
   const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
@@ -44,9 +44,9 @@ const CreatePostForm: React.FC = () => {
     setPrice(parseFloat(e.target.value));
   };
 
-  const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setQuantity(parseInt(e.target.value) || '');
-  };
+  // const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setQuantity(parseInt(e.target.value) || '');
+  // };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -70,8 +70,45 @@ const CreatePostForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!title || !content || price === '' || (isAllowedRole() && quantity === '')) {
-      setError('Title, content, price, and quantity (if applicable) are required');
+    // if (!title || !content || price === '' || (isAllowedRole() && quantity === '')) {
+    //   setError('Title, content, price, and quantity (if applicable) are required');
+    //   return;
+    // }
+    if (!title || !content || price === '' ) {
+      setError('Title, content, price, are required');
+      return;
+    }
+
+    if (price < 150) {
+      setError('asPrice cannot be below 150gg');
+      return; // Prevent submission if price is invalid
+    }
+    if (typeof price === 'number') {
+      const priceStr = price.toString();
+      
+      console.log("Price as string: ", priceStr);
+      
+      const priceLength = priceStr.length;  // Get the length of the price
+    
+      console.log("Price length: ", priceLength);
+    
+      // Check if the last digit of the price is 1 or 6
+      const lastDigit = priceStr.charAt(priceStr.length - 1); // Get the last character (digit)
+      console.log("Last digit of price: ", lastDigit);
+    
+      if (lastDigit === '1' || lastDigit === '6') {
+        setError('Price cannot end in 1 or 6');
+        console.log("Error: Price ends in 1 or 6.");
+        return; // Prevent submission if the price ends in 1 or 6
+      }
+    }
+    if (selectedTags.length === 0) {
+      setError('At least one tag is required');
+      return;
+    }
+  
+    if (images.length === 0) {
+      setError('At least one image is required');
       return;
     }
 
@@ -79,9 +116,9 @@ const CreatePostForm: React.FC = () => {
     formData.append('title', title);
     formData.append('content', content);
     formData.append('price', price.toString());
-    if (isAllowedRole()) {
-      formData.append('quantity', quantity.toString());
-    }
+    // if (isAllowedRole()) {
+    //   formData.append('quantity', quantity.toString());
+    // }
     selectedTags.forEach(tag => {
       formData.append('tags[]', tag.id.toString());
     });
@@ -101,7 +138,7 @@ const CreatePostForm: React.FC = () => {
         setTitle('');
         setContent('');
         setPrice('');
-        setQuantity('');
+        // setQuantity('');
         setImages([]);
         setSelectedTags([]);
         setError('');
@@ -148,12 +185,12 @@ const CreatePostForm: React.FC = () => {
                   min="0"
                   step="0.01"
                   className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring"
-                  placeholder="Price (e.g. 100.00)"
+                  placeholder="Price (e.g. 150.00)"
                   value={price}
                   onChange={handlePriceChange}
                 />
               </div>
-              {isAllowedRole() && (
+              {/* {isAllowedRole() && (
                 <div>
                   <input
                     type="number"
@@ -164,7 +201,7 @@ const CreatePostForm: React.FC = () => {
                     onChange={handleQuantityChange}
                   />
                 </div>
-              )}
+              )} */}
               <div>
                 <input
                   type="file"

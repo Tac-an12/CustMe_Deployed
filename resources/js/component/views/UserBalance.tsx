@@ -69,10 +69,10 @@ const PaymentsTable = () => {
   return (
     <div>
       <Header />
-      <TableContainer component={Paper} className="shadow-md rounded-lg mt-20">
+      <TableContainer component={Paper} className="shadow-md rounded-lg mt-20" style={{ maxHeight: '570px', overflowY: 'auto' }}>
         {Array.isArray(requests) && requests.length > 0 ? (
           <Table>
-            <TableHead className="bg-gray-300">
+            <TableHead style={{ position: 'sticky', top: 0, backgroundColor: '#E0E0E0', zIndex: 2 }}>
               <TableRow>
                 <TableCell className="text-white font-semibold">ID</TableCell>
                 <TableCell className="text-white font-semibold">

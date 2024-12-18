@@ -32,18 +32,13 @@ export const SalesReportProvider: React.FC<{ children: React.ReactNode }> = ({
     setError(null);
 
     try {
-      // Get the token from localStorage or wherever it's stored
-      const authToken = localStorage.getItem("authToken"); // Adjust as necessary
-
-      if (!authToken) {
-        throw new Error("Authorization token is missing");
-      }
-
-      // Make the API request with the Bearer token in the headers
+    
+      // Make the API request with the Bearer token in the headers, if available
       const response = await apiService.get("/sales-report", {
+        withCredentials: true,
         headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
+          'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+        }
       });
 
       setSalesReport(response.data);

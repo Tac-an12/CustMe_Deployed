@@ -89,7 +89,7 @@ const NotificationsDropdown: React.FC = () => {
                         backgroundColor: 'rgba(0, 0, 255, 0.2)',
                       },
                     }}
-                    onClick={() => handleNotificationClick(notification.id)}
+                    onClick={() => navigate('/notifications')} 
                   >
                     <Typography variant="body2" color="text.primary">
                       {notification.content}

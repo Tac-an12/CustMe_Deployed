@@ -107,7 +107,7 @@ const ChatForm: React.FC = () => {
                       <ListItemAvatar>
                         <Badge color="success" variant="dot" invisible={!chat.online}>
                           <Avatar
-                            src={chat.personal_information?.profilepicture ? `http://127.0.0.1:8000/storage/${chat.personal_information.profilepicture}` : "https://via.placeholder.com/40"}
+                            src={chat.personal_information?.profilepicture ? `https://custme.site/storage/app/public/${chat.personal_information.profilepicture}` : "https://via.placeholder.com/40"}
                             alt={chat.username || "User"}
                             className="rounded-full"
                           />
@@ -129,7 +129,7 @@ const ChatForm: React.FC = () => {
                   <div className="flex justify-between">
                     <div className="flex space-x-4">
                       <Avatar
-                        src={selectedChatUser?.personal_information?.profilepicture ? `http://127.0.0.1:8000/storage/${selectedChatUser.personal_information.profilepicture}` : "https://via.placeholder.com/40"}
+                        src={selectedChatUser?.personal_information?.profilepicture ? `https://custme.site/storage/app/public/${selectedChatUser.personal_information.profilepicture}` : "https://via.placeholder.com/40"}
                         alt={selectedChatUser.username || "User"}
                         className="w-16 h-16 rounded-full"
                       />
@@ -154,9 +154,9 @@ const ChatForm: React.FC = () => {
                         {chat.content && <div>{chat.content}</div>}
                         {chat.file_path && (
                           chat.file_path.endsWith(".png") || chat.file_path.endsWith(".jpg") || chat.file_path.endsWith(".jpeg") ? (
-                            <img src={`http://127.0.0.1:8000/storage/${chat.file_path}`} alt="uploaded" style={{ width: '100%', borderRadius: '8px' }} />
+                            <img src={`https://custme.site/storage/app/public/${chat.file_path}`} alt="uploaded" style={{ width: '100%', borderRadius: '8px' }} />
                           ) : (
-                            <a href={`http://127.0.0.1:8000/storage/${chat.file_path}`} download>
+                            <a href={`https://custme.site/storage/app/public/${chat.file_path}`} download>
                               {chat.file_path.split('/').pop()} {/* Display file name as clickable link */}
                             </a>
                           )

@@ -17,7 +17,7 @@ const EditPostForm: React.FC = () => {
   const [title, setTitle] = useState<string>(post?.title || '');
   const [content, setContent] = useState<string>(post?.content || '');
   const [price, setPrice] = useState<number>(post?.price ? Number(post.price) : 0);
-  const [quantity, setQuantity] = useState<number>(post?.quantity ? Number(post.quantity) : 0);
+  // const [quantity, setQuantity] = useState<number>(post?.quantity ? Number(post.quantity) : 0);
   const [images, setImages] = useState<File[]>([]);
   const [existingImages, setExistingImages] = useState(post?.images || []);
   const [tags, setTags] = useState<{ id: number; name: string }[]>(post?.tags || []);
@@ -41,7 +41,7 @@ const EditPostForm: React.FC = () => {
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => setTitle(e.target.value);
   const handleContentChange = (e: React.ChangeEvent<HTMLInputElement>) => setContent(e.target.value);
   const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => setPrice(parseFloat(e.target.value));
-  const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => setQuantity(parseInt(e.target.value) || 0);
+  // const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => setQuantity(parseInt(e.target.value) || 0);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -71,8 +71,13 @@ const EditPostForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!title || !content || (isAllowedRole && quantity === '')) {
-      setError('Title, content, and quantity (if applicable) are required');
+    // if (!title || !content || (isAllowedRole && quantity === '')) {
+    //   setError('Title, content, and quantity (if applicable) are required');
+    //   return;
+    // }
+    
+    if (!title || !content) {
+      setError('Title, content,  are required');
       return;
     }
     const hasEmptyTags = tags.some(tag => !tag.name.trim());
@@ -80,17 +85,51 @@ const EditPostForm: React.FC = () => {
       setError('Tags cannot be empty');
       return;
     }
-  
+    if (price < 150) {
+      setError('Price cannot be below 150');
+      return; // Prevent submission if price is invalid
+    }
+    // Validation for tags and images
+      if (tags.length === 0) {
+        setError('At least one tag is required');
+        return; // Prevent form submission if no tags
+      }
 
-    const formData = new FormData();
+      if (images.length === 0 && existingImages.length === 0) {
+        setError('At least one image is required');
+        return; // Prevent form submission if no images
+      }
+
+      if (typeof price === 'number') {
+        const priceStr = price.toString();
+        
+        console.log("Price as string: ", priceStr);
+        
+        const priceLength = priceStr.length;  // Get the length of the price
+      
+        console.log("Price length: ", priceLength);
+      
+        // Check if the last digit of the price is 1 or 6
+        const lastDigit = priceStr.charAt(priceStr.length - 1); // Get the last character (digit)
+        console.log("Last digit of price: ", lastDigit);
+      
+        if (lastDigit === '1' || lastDigit === '6') {
+          setError('Price cannot end in 1 or 6');
+          console.log("Error: Price ends in 1 or 6.");
+          return; // Prevent submission if the price ends in 1 or 6
+        }
+      }
+
+
+    const formData = new FormData();  
     formData.append('_method', 'put');
     formData.append('title', title);
     formData.append('content', content);
     formData.append('price', price.toString());
 
-    if (isAllowedRole && quantity !== '') {
-      formData.append('quantity', quantity.toString());
-    }
+    // if (isAllowedRole && quantity !== '') {
+    //   formData.append('quantity', quantity.toString());
+    // }
 
     images.forEach(image => {
       formData.append('images[]', image);
@@ -169,7 +208,7 @@ const EditPostForm: React.FC = () => {
                   onChange={handlePriceChange}
                 />
               </div>
-              {isAllowedRole && (
+              {/* {isAllowedRole && (
                 <div>
                   <input
                     type="number"
@@ -180,7 +219,7 @@ const EditPostForm: React.FC = () => {
                     onChange={handleQuantityChange}
                   />
                 </div>
-              )}
+              )} */}
               <div>
                 <input
                   type="file"
@@ -194,7 +233,7 @@ const EditPostForm: React.FC = () => {
                   {existingImages.map((image) => (
                     <div key={image.image_id} className="relative inline-block mr-2 mb-2">
                       <img
-                        src={`http://127.0.0.1:8000/storage/${image.image_path}`}
+                        src={`https://custme.site/storage/app/public/images/${image.image_path}`}
                         alt={`Existing Preview`}
                         className="w-32 h-32 object-cover rounded"
                       />

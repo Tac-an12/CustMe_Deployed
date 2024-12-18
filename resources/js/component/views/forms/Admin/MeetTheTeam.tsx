@@ -68,7 +68,7 @@ const MeetTheTeam = () => {
                   <CardMedia
                     component="img"
                     height="200"
-                    image={`http://127.0.0.1:8000/storage/${profile.personal_information.profilepicture}`}
+                    image={`https://custme.site/storage/app/public/images/${profile.personal_information.profilepicture}`}
                     alt={profile.username}
                   />
                   <CardContent>
@@ -148,7 +148,7 @@ const MeetTheTeam = () => {
                   <CardMedia
                     component="img"
                     height="200"
-                    image={`http://127.0.0.1:8000/storage/${profile.personal_information.profilepicture}`}
+                    image={`https://custme.site/storage/app/public/images/${profile.personal_information.profilepicture}`}
                     alt={profile.username}
                   />
                   <CardContent>

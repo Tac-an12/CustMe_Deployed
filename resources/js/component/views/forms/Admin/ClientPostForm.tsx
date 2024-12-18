@@ -40,7 +40,7 @@ const PostCard = ({ post, onRequestSubmit }) => {
           <Avatar 
             alt={post.user.username} 
             src={post.user.personal_information?.profilepicture
-              ? `http://127.0.0.1:8000/storage/${post.user.personal_information.profilepicture}`
+              ? `https://custme.site/storage/${post.user.personal_information.profilepicture}`
               : "https://via.placeholder.com/40"}
             sx={{ width: 40, height: 40 }} 
           />
@@ -77,7 +77,7 @@ const PostCard = ({ post, onRequestSubmit }) => {
       {post.images.length > 0 && (
         <div className="relative mb-4">
           <img
-            src={`http://127.0.0.1:8000/storage/${post.images[currentIndex].image_path}`}
+            src={`https://custme.site/storage/${post.images[currentIndex].image_path}`}
             alt={`Post Image ${post.images[currentIndex].image_id}`}
             className="w-full h-auto rounded-md"
           />

@@ -73,12 +73,12 @@ const UserHomeForm = () => {
     };
 
     return (
-      <div className="bg-white p-4 mb-4 rounded-md shadow-md max-w-md">
-        <div className="flex justify-between items-center mb-2">
+      <div className="bg-white p-4 mb-4 rounded-md justify-center shadow-md max-w-md">
+        <div className="flex justify-between  items-center mb-2">
           <div className="flex items-center">
             <Avatar
               alt={post.user.username}
-              src={`http://127.0.0.1:8000/storage/${post.user.personal_information.profilepicture}}`}
+              src={`https://custme.site/storage/app/public/${post.user.personal_information.profilepicture}}`}
               sx={{ width: 40, height: 40 }}
             />
             <div className="ml-3">
@@ -128,7 +128,7 @@ const UserHomeForm = () => {
         {post.images.length > 0 && (
           <div className="relative mb-4">
             <img
-              src={`http://127.0.0.1:8000/storage/${post.images[currentIndex].image_path}`}
+              src={`https://custme.site/storage/app/public/${post.images[currentIndex].image_path}`}
               alt={`Post Image ${post.images[currentIndex].image_id}`}
               className="w-full h-auto rounded-md"
             />
@@ -149,9 +149,9 @@ const UserHomeForm = () => {
   };
 
   return (
-    <div className="ml-48 mt-16 p-8 flex justify-center">
+    <div className="ml-5 mt-16 flex justify-center">
       <Header />
-      <div className="w-full max-w-xl">
+      <div className="mt-6">
         <Typography variant="h5" className="mb-6">
           My Posts
         </Typography>

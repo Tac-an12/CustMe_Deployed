@@ -102,7 +102,7 @@ const UserListForm: React.FC = () => {
                               user.certificates.map(cert => (
                                 <a
                                   key={cert.id}
-                                  href={`http://127.0.0.1:8000/storage/${cert.file_path}`}
+                                  href={`https://custme.site/storage/app/public/${cert.file_path}`}
                                   download
                                   className="text-blue-500 underline"
                                 >
@@ -128,7 +128,7 @@ const UserListForm: React.FC = () => {
                               user.portfolios.map(portfolio => (
                                 <a
                                   key={portfolio.id}
-                                  href={`http://127.0.0.1:8000/storage/${portfolio.file_path}`}
+                                  href={`https://custme.site/storage/app/public/${portfolio.file_path}`}
                                   download
                                   className="text-blue-500 underline"
                                 >

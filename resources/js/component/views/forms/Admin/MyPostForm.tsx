@@ -33,7 +33,7 @@ const ArtistAndProviderList: React.FC = () => {
                     
                     // Inline approach to set image URLs based on availability
                     const profilePicture = provider?.personal_information?.profilepicture
-                        ? `http://127.0.0.1:8000/storage/${provider.personal_information.profilepicture}`
+                        ? `https://custme.site/storage/app/public/${provider.personal_information.profilepicture}`
                         : '/default-avatar.png';
 
                     return (

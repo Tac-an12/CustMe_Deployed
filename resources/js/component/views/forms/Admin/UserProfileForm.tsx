@@ -59,8 +59,8 @@ const UserProfileForm: React.FC = () => {
     }
   };
 
-  const coverPhotoUrl = coverPhotoPreview || (coverPhoto ? `http://127.0.0.1:8000/storage/${coverPhoto}` : null);
-  const profilePictureUrl = profilePicturePreview || (profilePicture ? `http://127.0.0.1:8000/storage/${profilePicture}` : null);
+  const coverPhotoUrl = coverPhotoPreview || (coverPhoto ? `https://custme.site/storage/app/public/${coverPhoto}` : null);
+  const profilePictureUrl = profilePicturePreview || (profilePicture ? `https://custme.site/storage/app/public/${profilePicture}` : null);
   const placeholderImageUrl = 'https://static.vecteezy.com/system/resources/previews/004/141/669/original/no-photo-or-blank-image-icon-loading-images-or-missing-image-mark-image-not-available-or-image-coming-soon-sign-simple-nature-silhouette-in-frame-isolated-illustration-vector.jpg';
 
   const defaultPosition: LatLngTuple = [40.785091, -73.968285];

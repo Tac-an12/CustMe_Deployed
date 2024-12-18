@@ -24,8 +24,10 @@ const LoginForm = () => {
   const [errorMessage, setErrorMessage] = useState(""); // State for error messages that trigger the dialog
   const { login, user } = useAuth(); // Access errorMessage from context
   const navigate = useNavigate();
+  
 
   useEffect(() => {
+    
     if (user) {
       switch (user?.role?.rolename) {
         case "Admin":
@@ -109,7 +111,7 @@ const LoginForm = () => {
   };
 
   return (
-    <div className="max-w-md w-full p-8 rounded-lg shadow-lg bg-white mx-auto mt-10">
+    <div className="max-w-md w-full p-8 rounded-lg shadow-2xl bg-white mx-auto mt-10">
       <div className="text-black font-extrabold text-4xl text-center">
         <span className="text-blue-500">C</span>
         <span className="text-blue-500">u</span>
@@ -214,6 +216,7 @@ const LoginForm = () => {
         </DialogActions>
       </Dialog>
     </div>
+    
   );
 };
 
