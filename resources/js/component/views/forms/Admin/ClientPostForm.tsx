@@ -149,10 +149,13 @@ const ClientPost = () => {
   };
 
   return (
-    <div className="ml-4 sm:ml-16 mt-8 p-4 flex justify-center">
-      <Header />
-      <div className="w-full max-w-xl">
-        <Typography variant="h5" className="mb-6 text-sm sm:text-lg">Clients Post</Typography>
+    <div className="ml-4 sm:ml-16 mt-8 p-4 flex flex-col items-center">
+  <Header />
+  <div className="w-full max-w-xl mt-10"> {/* Added 'mt-16' to push the content down */}
+    <Typography variant="h5" className="mb-6 text-sm sm:text-lg">
+      Clients Posts
+    </Typography>
+
         {posts.length > 0 ? (
           posts
             .filter(post => post.user.role.rolename === 'User')

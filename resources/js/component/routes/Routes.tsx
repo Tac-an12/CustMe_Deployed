@@ -35,6 +35,7 @@ import ForgotPassword from "../views/forgotpassword";
 import ResetPassword from "../views/resetpassword";
 import EmailVerification from "../views/verifyemail";
 import MeetTheTeam from "../views/forms/Admin/MeetTheTeam";
+import PurchasesList from "../views/forms/User/UserPurchases";
 
 const AppRoutes = () => {
   return (
@@ -66,6 +67,7 @@ const AppRoutes = () => {
         <Route path="/user" element={<UserHome />} />
         <Route path="/getlocation" element={<MapView />} />
         <Route path="/meet-the-team" element={<MeetTheTeam />} />
+        <Route path="/My-Purchases" element={<PurchasesList />} />
 
         {/* <Route path="/List-of-Desinger&Printing-Provider" element={<ArtistPrintingProviders />} /> */}
       </Route>
@@ -73,6 +75,7 @@ const AppRoutes = () => {
       {/* Protected routes for Graphic Designer */}
       <Route element={<ProtectedRoutes roles={["Graphic Designer"]} />}>
         <Route path="/graphic-designer" element={<GraphicHome />} />
+        <Route path="/clientpost" element={<ClientPost/>} />
       </Route>
 
       {/* Protected routes for Printing Shop */}
@@ -102,7 +105,7 @@ const AppRoutes = () => {
         <Route path="/posts" element={<CreatePostForm />} />
         <Route path="/provider/:id/profile" element={<UserProfileForm />} />
         <Route path="/notifications" element={<RequestForm />} />
-        <Route path="/clientpost" element={<ClientPost />} />
+        {/* <Route path="/clientpost" element={<ClientPost />} /> uncomment this to so printing can view client post */}
         <Route path="/clients/:id/profile" element={<ClientProfile />} />
         <Route path="/designerpost" element={<DesignerPostForm />} />
         <Route path="/providerpost" element={<ProviderPostForm />} />

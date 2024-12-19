@@ -27,60 +27,59 @@ const SearchBar: React.FC<{ onLocationSelect?: (location: any) => void }> = ({ o
     }, 300); // Debounce time in milliseconds
   };
 
-  // Clear suggestions when the mouse leaves the search bar or input is blurred
+  // Ensure suggestions remain visible even when clicking inside the search bar
   useEffect(() => {
-    const handleMouseLeave = (event: MouseEvent) => {
+    const handleOutsideClick = (event: MouseEvent) => {
       if (searchBarRef.current && !searchBarRef.current.contains(event.target as Node)) {
         setQuery('');
       }
     };
 
-    document.addEventListener('mousemove', handleMouseLeave);
-
+    document.addEventListener('mousedown', handleOutsideClick);
     return () => {
-      document.removeEventListener('mousemove', handleMouseLeave);
+      document.removeEventListener('mousedown', handleOutsideClick);
     };
   }, []);
 
-  // Clear suggestions when input is blurred
-  const handleInputBlur = () => {
-    setQuery('');
-  };
-
   return (
-    <Box sx={{ flexGrow: 4, display: 'flex', justifyContent: 'flex-start' }} ref={searchBarRef}>
-      <div className="relative w-full max-w-md">
+    <Box
+      sx={{
+        flexGrow: 4,
+        display: 'flex',
+        justifyContent: 'flex-start',
+        padding: '8px',
+      }}
+      ref={searchBarRef}
+    >
+      <div className="relative w-full max-w-md md:max-w-lg lg:max-w-xl">
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10">
           <SearchIcon className="text-black" />
         </div>
         <InputBase
           placeholder="Search…"
-          className="pl-12 pr-4 py-2 rounded-full bg-gray-200 text-black w-full"
+          className="pl-12 pr-4 py-2 rounded-full bg-gray-200 text-black w-full text-base sm:text-lg"
           inputProps={{ 'aria-label': 'search' }}
           value={query}
           onChange={handleInputChange}
-          onBlur={handleInputBlur} // Clear suggestions on blur
         />
-        {suggestions.length > 0 && !isTyping && (
+        {suggestions.length > 0 && (
           <ul className="absolute left-0 right-0 bg-white border border-gray-300 mt-1 rounded-lg shadow-lg z-20">
             {suggestions.map((store) => {
               const latitude = parseFloat(store.location.latitude);
               const longitude = parseFloat(store.location.longitude);
-              console.log('Latitude:', latitude, 'Longitude:', longitude); // Debug log for latitude and longitude
-              
+
               return (
                 <li
                   key={store.id}
-                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm sm:text-base"
                   onClick={() => {
-                    console.log('Suggestion clicked:', store.location); // Debug log for suggestion click
                     if (onLocationSelect) {
                       onLocationSelect({
                         latitude,
                         longitude,
                       });
                     }
-                    setQuery('');
+                    setQuery(store.storename); // Set the query to the selected store name
                   }}
                 >
                   {store.storename}

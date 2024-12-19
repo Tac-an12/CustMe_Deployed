@@ -49,6 +49,10 @@ const ClientProfile = () => {
   const profilePicture = profile.personal_information?.profilepicture
     ? `https://custme.site/storage/app/public/${profile.personal_information.profilepicture}`
     : "default-profile-image-url";
+    const isnotVisible = profile?.role_name === "User" || profile?.role_name === "Admin";
+    const isAllowedRole = ["Printing Shop", "Graphic Designer"].includes(
+          profile?.role_name || ""
+        );
 
   const handleTabChange = (_: React.ChangeEvent<{}>, newValue: number) => {
     setSelectedTab(newValue);
@@ -137,7 +141,8 @@ const ClientProfile = () => {
               scrollButtons="auto"
             >
               <Tab label="Profile" />
-              <Tab label="Rating" />
+              {!isnotVisible && <Tab label="Rating" />}
+
             </Tabs>
           </AppBar>
 
@@ -147,7 +152,9 @@ const ClientProfile = () => {
               <>
                 <Grid container spacing={2}>
                   <Grid item xs={12} sm={6}>
+                  {isAllowedRole && (
                     <AboutMe />
+                  )}
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <Carousel>

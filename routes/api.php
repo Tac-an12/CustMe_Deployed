@@ -17,6 +17,7 @@ use App\Http\Controllers\Api\TagsController;
 use App\Http\Controllers\Api\PayMongoWebhookController;
 use App\Http\Controllers\Api\PasswordResetController;
 use App\Http\Controllers\Api\VerificationController;
+use App\Http\Controllers\Api\PurchasesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Broadcast;
@@ -61,7 +62,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/providerposts', [PostController::class, 'getPrintingProviderPosts']);
     Route::get('/clientposts', [PostController::class, 'getClientPosts']);
     Route::get('/allposts', [PostController::class, 'displayPost']);
-
+    
+    Route::get('/purchases/{id}', [PurchasesController::class, 'getUserPurchases']);
 
     Route::post('/requests/{requestId}/accept/{notificationId}', [RequestController::class, 'accept']);
     Route::post('/requests/{requestId}/decline/{notificationId}', [RequestController::class, 'decline']);

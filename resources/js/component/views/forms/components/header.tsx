@@ -12,6 +12,7 @@ import ListItemText from '@mui/material/ListItemText';
 import { FaSignOutAlt, FaPlus } from 'react-icons/fa';
 import { Search as SearchIcon } from '@mui/icons-material';
 import { InputBase } from '@mui/material';
+
 import NotificationsDropdown from '../components/NotificationsDropDown';
 import Avatar from '@mui/material/Avatar';
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
@@ -65,6 +66,9 @@ const Header: React.FC<HeaderProps> = ({ onLocationSelect, onPostSearchSelect })
   };
   const isAdminRole = () => {
     return user && (user.role.rolename === 'Admin');
+  };
+  const isDesignerRole = () => {
+    return user && (user.role.rolename === 'Graphic Designer');
   };
   const isDesingerOrProviderRole = () => {
     return user && (user.role.rolename === 'Printing Shop' || user.role.rolename === 'Graphic Designer');
@@ -240,6 +244,16 @@ const Header: React.FC<HeaderProps> = ({ onLocationSelect, onPostSearchSelect })
                 </ListItem>
               </NavLink>
             )}
+              {isUserRole() && (
+              <NavLink to="/My-Purchases" className="text-white">
+                <ListItem>
+                  <ListItemIcon sx={{ color: 'white' }}>
+                    <ShoppingCartIcon />
+                  </ListItemIcon>
+                  {isSidebarExpanded && <ListItemText primary="My Purchases" />}
+                </ListItem>
+              </NavLink>
+            )}
                {isDesingerOrProviderRole() && (  
             <NavLink to="/user" className="text-white">
               <ListItem>
@@ -283,7 +297,7 @@ const Header: React.FC<HeaderProps> = ({ onLocationSelect, onPostSearchSelect })
               </NavLink>
             )}
 
-            {isDesingerOrProviderRole() && (
+{isDesignerRole() && (
               <NavLink to="/clientpost" className="text-white">
                 <ListItem>
                   <ListItemIcon sx={{ color: 'white' }}>
@@ -293,6 +307,17 @@ const Header: React.FC<HeaderProps> = ({ onLocationSelect, onPostSearchSelect })
                 </ListItem>
               </NavLink>
             )}
+{/* uncomment this below to view cleint post for both designer provider */}
+            {/* {isDesingerOrProviderRole() && (
+              <NavLink to="/clientpost" className="text-white">
+                <ListItem>
+                  <ListItemIcon sx={{ color: 'white' }}>
+                    <BrushIcon />
+                  </ListItemIcon>
+                  {isSidebarExpanded && <ListItemText primary="Clients Post" />}
+                </ListItem>
+              </NavLink>
+            )} */}
 
 {isUserRole() && (
               <NavLink to="/user" className="text-white">

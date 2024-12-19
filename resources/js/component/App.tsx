@@ -19,6 +19,7 @@ import { BalanceRequestProvider } from "./context/BalanceRequestContext";
 import { SalesReportProvider } from "./context/SalesReportContext";
 import { RatingProvider } from "./context/RatingContext";
 import { PostSearchProvider } from "./context/PostSearchContext";
+import { PurchaseProvider } from "./context/PurchasesContext";
 
 const App = () => {
   return (
@@ -41,7 +42,9 @@ const App = () => {
                                     <SalesReportProvider>
                                       <RatingProvider>
                                       <PostSearchProvider>
+                                        <PurchaseProvider>
                                         <Routes />
+                                        </PurchaseProvider>
                                         </PostSearchProvider>
                                       </RatingProvider>
                                     </SalesReportProvider>

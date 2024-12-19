@@ -90,7 +90,7 @@ const PaymentsTable = () => {
             >
               <TableRow>
                 <TableCell>ID</TableCell>
-                <TableCell>Request ID</TableCell>
+                <TableCell>Order Number</TableCell>
                 {!isMobile && <TableCell>Request Type</TableCell>} {/* Hide on mobile */}
                 <TableCell>Amount</TableCell>
                 <TableCell>Status</TableCell>
